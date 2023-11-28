@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="" id="mergeForm">
+      <input type="file" id="receiptImage" accept="image/*" />
+      <input type="file" id="yourImage" accept="image/*" />
+
+      <input type="submit" />
+    </form>
+    <canvas id="canvas"></canvas>
+
+    <img
+      src=""
+      id="resultImage"
+      alt="Waiting For Upload..."
+      style="width: 80%; height: 80%"
+    />
+
+    <a href="" id="link" download>Download</a>
+  </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@latest"></script>
+  <script src="js/index.js"></script>
+</html>
