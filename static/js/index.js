@@ -3,6 +3,103 @@ const mergeForm = document.getElementById("mergeForm");
 // const yourImage = document.getElementById("yourImage");
 // const receiptImage = document.getElementById("receiptImage");
 
+const compressImage = async (file, { quality = 1, type = file.type }) => {
+  // Get as image data
+  const imageBitmap = await createImageBitmap(file);
+
+  // Draw to canvas
+  const canvas = document.createElement("canvas");
+  canvas.width = imageBitmap.width;
+  canvas.height = imageBitmap.height;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(imageBitmap, 0, 0);
+
+  // Turn into Blob
+  return await new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+};
+const receiptImage = document.getElementById("receiptImage");
+const yourImage = document.getElementById("yourImage");
+
+yourImage.addEventListener("change", async (e) => {
+  const { files } = e.target;
+
+  // No files selected
+  if (!files.length) return;
+
+  const dataTransfer = new DataTransfer();
+  // For every file in the files list
+  for (const file of files) {
+    console.log(file.size / (1024 * 1024));
+    if (file.size / (1024 * 1024) <= 0.5) {
+      return 0;
+    }
+    // We don't have to compress files that aren't images
+    if (!file.type.startsWith("image")) {
+      // TODO: Not an image
+      dataTransfer.items.add(file);
+      continue;
+    }
+
+    // We compress the file by 50%
+    const compressedFile = await compressImage(file, {
+      // 0: is maximum compression
+      // 1: is no compression
+      quality: 0.5,
+
+      // We want a JPEG file
+      type: "image/jpeg",
+    });
+
+    const blobURL = URL.createObjectURL(compressedFile);
+    const compressedFileAsFile = new File([compressedFile], blobURL, {
+      type: compressedFile.type,
+    });
+
+    dataTransfer.items.add(compressedFileAsFile);
+  }
+  e.target.files = dataTransfer.files;
+});
+
+receiptImage.addEventListener("change", async (e) => {
+  const { files } = e.target;
+
+  // No files selected
+  if (!files.length) return;
+
+  const dataTransfer = new DataTransfer();
+  // For every file in the files list
+  for (const file of files) {
+    console.log(file.size / (1024 * 1024));
+    if (file.size / (1024 * 1024) <= 0.5) {
+      return 0;
+    }
+    // We don't have to compress files that aren't images
+    if (!file.type.startsWith("image")) {
+      // TODO: Not an image
+      dataTransfer.items.add(file);
+      continue;
+    }
+
+    // We compress the file by 50%
+    const compressedFile = await compressImage(file, {
+      // 0: is maximum compression
+      // 1: is no compression
+      quality: 0.5,
+
+      // We want a JPEG file
+      type: "image/jpeg",
+    });
+
+    const blobURL = URL.createObjectURL(compressedFile);
+    const compressedFileAsFile = new File([compressedFile], blobURL, {
+      type: compressedFile.type,
+    });
+
+    dataTransfer.items.add(compressedFileAsFile);
+  }
+  e.target.files = dataTransfer.files;
+});
+
 const mergeImages = (e) => {
   e.preventDefault();
   //instantiate canvas
